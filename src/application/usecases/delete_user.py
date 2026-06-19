@@ -7,4 +7,10 @@ class DeleteUser(DeleteUserPort):
         self._uow = uow
 
     async def execute(self, user_id: int) -> None:
-        raise NotImplementedError
+        async with self._uow:
+            deleted = await self._uow.users.delete(user_id)
+            if not deleted:
+                from src.application.exceptions import UserNotFoundError
+
+                raise UserNotFoundError(user_id)
+            await self._uow.commit()
