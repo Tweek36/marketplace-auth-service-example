@@ -21,10 +21,8 @@ RUN addgroup --system --gid 1000 appuser && \
 
 USER appuser
 
-# Install uv first
 RUN pip install --no-cache-dir uv
 
-# Then copy dependency files and install dependencies
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 
